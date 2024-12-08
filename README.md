@@ -11,8 +11,12 @@ Pi-holeにおいてブロックされ、エラーを吐いてそのままのエ�
 ## What do this program do?
 
 1. DOMのロードまで待つ
-2. エラーを起こしているエレメントを探す
+2. エラーを起こしているエレメント（'IMG','SCRIPT','IFRAME','LINK','DIV','SPAN'）を探す
 3. そのエレメントを0.5秒後に削除
+
+1. Wait for loading DOM
+2. Serch element('IMG','SCRIPT','IFRAME','LINK','DIV','SPAN') that is causing an error
+3. Delete the element after 0.5 seconds
 
 ## Contribution
 
