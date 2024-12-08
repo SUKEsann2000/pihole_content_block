@@ -1,20 +1,54 @@
 // content.js
-(function() {
+(function () {
   'use strict';
 
-  // å¯¾è±¡ã®URLãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’ãƒã‚§ãƒƒã‚¯
-  const blockedURLs = ["0.0.0.0", "127.0.0.1"];
+  // ƒ[ƒhƒGƒ‰[‚ª”­¶‚µ‚½—v‘f‚ğíœ‚·‚éŠÖ”
+  const handleLoadError = (failedElement) => {
+      console.log(`Element failed to load:`, failedElement);
 
-  // å…¨ã¦ã®ãƒªãƒ³ã‚¯ã€ç”»åƒã€ã‚¹ã‚¯ãƒªãƒ—ãƒˆãªã©ã‚’ã‚¹ã‚­ãƒ£ãƒ³
-  const elements = document.querySelectorAll('a, img, iframe, script, link');
-  elements.forEach(element => {
-      const src = element.src || element.href;
-      if (src && blockedURLs.some(url => src.includes(url))) {
-          console.log(`Blocked element removed: ${src}`);
-          element.remove();
+      // 5•bŒã‚Éíœ
+      setTimeout(() => {
+          if (failedElement && failedElement.parentNode) {
+              console.log(`Removing failed element:`, failedElement);
+              failedElement.remove();
+          }
+      }, 5000); // 5•bŒã‚Éíœ
+  };
+
+  // ƒOƒ[ƒoƒ‹ƒGƒ‰[ƒnƒ“ƒhƒ‰
+  window.addEventListener('error', (event) => {
+      // ƒ^[ƒQƒbƒg‚ª‘¶İ‚µA“Á’è‚Ìƒ^ƒO‚Ìê‡‚É‚Ì‚İˆ—
+      const tags = ['IMG','SCRIPT','IFRAME','LINK','DIV','SPAN'];
+      if (event.target && tags.includes(event.target.tagName)) {
+          const failedElement = event.target;
+          handleLoadError(failedElement);
       }
-  });
+  }, true); // ƒLƒƒƒvƒ`ƒƒƒtƒF[ƒY‚ÅƒŠƒXƒ“
 
-  // consoleã‹ã‚‰ç¢ºèªç”¨ãƒ­ã‚°ã‚’å‡ºåŠ›
-  console.log("Blocked elements successfully removed.");
+  // ƒlƒbƒgƒ[ƒNƒGƒ‰[ŠÄ‹‚Ì‚½‚ß‚É fetch ‚ğƒ‰ƒbƒv
+  const originalFetch = window.fetch;
+  window.fetch = async (...args) => {
+      try {
+          const response = await originalFetch(...args);
+          if (!response.ok) {
+              console.warn(`Fetch failed for: ${args[0]} with status: ${response.status}`);
+          }
+          return response;
+      } catch (error) {
+          console.error(`Network fetch error:`, error);
+
+          // ƒGƒ‰[‚ªŒŸo‚³‚ê‚½ê‡AŠÖ˜A—v‘f‚ğíœ‚·‚éˆ—‚ğ’Ç‰Á‰Â”\
+          const url = args[0];
+          const elements = document.querySelectorAll('img, iframe, script, link');
+          elements.forEach((element) => {
+              if (element.src === url || element.href === url) {
+                  handleLoadError(element);
+              }
+          });
+
+          throw error; // ÄƒXƒ[‚µ‚Ä‘¼‚ÌƒGƒ‰[ƒnƒ“ƒhƒ‰‚ªˆ—‚Å‚«‚é‚æ‚¤‚É‚·‚é
+      }
+  };
+
+  console.log("Global error and fetch interceptor initialized.");
 })();
