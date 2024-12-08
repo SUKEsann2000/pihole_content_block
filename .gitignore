@@ -15,4 +15,7 @@ npm-debug.log*
 /release
 
 # imgsをignore
-imgs
+imgs/
+
+# vscode
+.vscode/
