@@ -12,7 +12,7 @@
               console.log(`Removing failed element:`, failedElement);
               failedElement.remove();
           }
-      }, 5000); // 5秒後に削除
+      }, 500); // 5秒後に削除
   };
 
   // グローバルエラーハンドラ
