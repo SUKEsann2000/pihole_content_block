@@ -1,6 +1,7 @@
 // content.js
 (function () {
   'use strict';
+  const tags = ['IMG','SCRIPT','IFRAME','LINK','DIV','SPAN'];
 
   // ロードエラーが発生した要素を削除する関数
   const handleLoadError = (failedElement) => {
@@ -18,7 +19,6 @@
   // グローバルエラーハンドラ
   window.addEventListener('error', (event) => {
       // ターゲットが存在し、特定のタグの場合にのみ処理
-      const tags = ['IMG','SCRIPT','IFRAME','LINK','DIV','SPAN'];
       if (event.target && tags.includes(event.target.tagName)) {
           const failedElement = event.target;
           handleLoadError(failedElement);
@@ -39,7 +39,7 @@
 
           // エラーが検出された場合、関連要素を削除する処理を追加可能
           const url = args[0];
-          const elements = document.querySelectorAll('img, iframe, script, link');
+          const elements = document.querySelectorAll(tags);
           elements.forEach((element) => {
               if (element.src === url || element.href === url) {
                   handleLoadError(element);
