@@ -10,12 +10,10 @@
     "128": "icons/icon_128.png"
   },
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "service_worker": "icon_clicked.js"
   },
-  "action": {
-    "default_title": "Pihole_content_block",
-    "default_popup": "popup.html"
-  },
+  "action": {},
   "permissions": [
     "activeTab"
   ],
@@ -28,5 +26,6 @@
         "contentScript.js"
       ]
     }
-  ]
+  ],
+  "options_page": "options.html"
 }
